@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using ASimpleBlogStarter.Shared.Post;
 using MediatR;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ASimpleBlogStarter.Server.Endpoints.Post
 {
+    [ApiController]
     [Route("api/post")]
     public class PostController : Controller
     {
@@ -22,7 +24,7 @@ namespace ASimpleBlogStarter.Server.Endpoints.Post
         }
 
         [Route("{id}")]
-        public async Task<IActionResult> Find(Get.Query query)
+        public async Task<IActionResult> Get([FromRoute]Get.Query query)
         {
             var post = await _mediator.Send(query);
             return Ok(post);
@@ -36,14 +38,14 @@ namespace ASimpleBlogStarter.Server.Endpoints.Post
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Add.Command command)
+        public async Task<IActionResult> Add([FromBody] Add.Command command)
         {
-            await _mediator.Send(command);
+           await _mediator.Send(command);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(Update.Command command)
+        public async Task<IActionResult> Update([FromBody] Update.Command command)
         {
             await _mediator.Send(command);
             return Ok();

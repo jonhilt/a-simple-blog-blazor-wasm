@@ -1,16 +1,12 @@
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using System.Reflection;
 using ASimpleBlogStarter.Server.Data;
 using ASimpleBlogStarter.Server.Models;
@@ -41,14 +37,19 @@ namespace ASimpleBlogStarter.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+                {
+                    options.IdentityResources["openid"].UserClaims.Add("role");
+                    options.ApiResources.Single().UserClaims.Add("role");
+                });
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
             services.AddControllersWithViews();
+
             services.AddRazorPages();
-            
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
         }
 
@@ -60,7 +61,7 @@ namespace ASimpleBlogStarter.Server
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseWebAssemblyDebugging();
-                
+
                 Database.InitialiseDatabase(app, env);
                 app.SeedTestUsers();
             }
@@ -71,6 +72,8 @@ namespace ASimpleBlogStarter.Server
                 app.UseHsts();
             }
 
+            app.UseMiddleware<HandleErrorsMiddleware>();
+            
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
