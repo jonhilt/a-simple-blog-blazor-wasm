@@ -4,6 +4,8 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace ASimpleBlogStarter.Server.Plumbing
 {
@@ -36,9 +38,8 @@ namespace ASimpleBlogStarter.Server.Plumbing
 
             if (!path.Value.StartsWith("/api"))
             {
-                await _next(context);
-            }
-            else
+                await _next(context);               
+            } else
             {
                 try
                 {
@@ -49,17 +50,17 @@ namespace ASimpleBlogStarter.Server.Plumbing
                     switch (ex)
                     {
                         case RestException re:
-                        {
-                            context.Response.StatusCode = (int) re.StatusCode;
-                            result = JsonSerializer.Serialize(new {re.Errors});
-                            break;
-                        }
+                            {
+                                context.Response.StatusCode = (int)re.StatusCode;
+                                result = JsonSerializer.Serialize(new { re.Errors });
+                                break;
+                            }
                     }
 
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync(result ?? "{}");
-                }
-            }
+                }               
+            }           
         }
     }
 }

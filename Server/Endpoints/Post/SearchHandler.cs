@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using ASimpleBlogStarter.Server.Data;
+using ASimpleBlogStarter.Server.Plumbing;
 using ASimpleBlogStarter.Shared.Post;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,10 @@ namespace ASimpleBlogStarter.Server.Endpoints.Post
         {
             var post = await _dbContext.Posts.SingleOrDefaultAsync(x => x.Slug == request.Slug,
                 cancellationToken: cancellationToken);
+
+            if (post == null)
+                throw new RestException(HttpStatusCode.NotFound, "Post not found");
+
             return new Search.Model
             {
                 Id = post.Id,
