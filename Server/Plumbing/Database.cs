@@ -7,14 +7,14 @@ namespace ASimpleBlogStarter.Server.Plumbing
 {
     public static class DataSeeder
     {
-        public static void SeedTestUsers(IServiceScope serviceScope)
+        public static async Task SeedTestUsers(IServiceScope serviceScope)
         {
             var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
             var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
             if (!roleManager.RoleExistsAsync("admin").Result)
             {
-                var result = roleManager.CreateAsync(new IdentityRole("admin")).Result;
+                await roleManager.CreateAsync(new IdentityRole("admin"));
             }
 
             CreateTestUser(userManager, "admin@jonhilton.net", "admin@jonhilton.net", "SuperLongPassword1$", "admin");

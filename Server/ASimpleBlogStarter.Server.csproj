@@ -10,6 +10,7 @@
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
+		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -21,10 +22,9 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<ProjectReference Include="..\Client\ASimpleBlogStarter.Client.csproj" />
-		<ProjectReference Include="..\Shared\ASimpleBlogStarter.Shared.csproj" />
+	  <ProjectReference Include="..\Client\ASimpleBlogStarter.Client.csproj" />
+	  <ProjectReference Include="..\Shared\ASimpleBlogStarter.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

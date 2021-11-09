@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "admin")]
+
+@page "/add"
+@using ASimpleBlogStarter.Shared.Post
+@using Blazored.FluentValidation
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <h3>Add new</h3>
+
+    <EditForm Model="Command" OnValidSubmit="HandleValidSubmit">
+    <FluentValidationValidator />
+        <div class="form-group">
+            <label for="title">Title</label>
+            <InputText id="title" @bind-Value="Command.Title" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="slug">Slug</label>
+            <InputText id="slug" @bind-Value="Command.Slug" class="form-control" />
+        </div>
+        <div class="form-group">
+            <InputTextArea @bind-Value="Command.Body" class="form-control" rows="20" />
+        </div>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary">Publish</button>
+        </div>
+        <ValidationSummary />
+    </EditForm>
+
+</div>
+
+@code {
+
+    protected Add.Command Command { get; set; } = new Add.Command();
+
+    protected async Task HandleValidSubmit()
+    {
+        await Http.PostAsJsonAsync("api/post", Command);
+        NavigationManager.NavigateTo($"/{Command.Slug}");
+    }
+}

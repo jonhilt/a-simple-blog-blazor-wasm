@@ -1,0 +1,50 @@
+﻿@page "/edit/{id:int}"
+@using ASimpleBlogStarter.Shared.Post
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<h3>Edit post</h3>
+
+<EditForm Model="Command" OnValidSubmit="HandleValidSubmit">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <InputText id="title" @bind-Value="Command.Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="slug">Slug</label>
+        <input id="slug" value="@Model.Slug" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <InputTextArea @bind-Value="Command.Body" class="form-control" rows="20" />
+    </div>
+    <div class="text-right">
+        <ValidationSummary />
+        <button type="submit" class="btn btn-primary">Publish</button>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter] public int Id { get; set; }
+
+    public Update.Command Command { get; set; } = new Update.Command();
+    public Get.Model Model { get; set; } = new Get.Model();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await HttpClient.GetFromJsonAsync<Get.Model>($"/api/Post/{Id}");
+
+        Command = new Update.Command
+            {
+                Id = Model.Id,
+                Body = Model.Body,
+                Title = Model.Title
+            };
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        await HttpClient.PutAsJsonAsync("/api/Post", Command);
+        NavigationManager.NavigateTo($"/{Model.Slug}");
+    }
+}

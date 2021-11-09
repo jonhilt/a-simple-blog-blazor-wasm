@@ -1,3 +1,5 @@
+using ASimpleBlogStarter.Client.Shared;
+using ASimpleBlogStarter.Shared.Post;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -22,6 +24,8 @@ namespace ASimpleBlogStarter.Client
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("ASimpleBlogStarter.ServerAPI"));
 
             builder.Services.AddApiAuthorization();
+
+            builder.Services.AddTransient<ISlugValidator, SlugValidator>();
 
             await builder.Build().RunAsync();
         }
