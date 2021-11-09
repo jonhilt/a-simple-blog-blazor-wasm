@@ -50,6 +50,8 @@ else
     app.UseHsts();
 }
 
+app.UseMiddleware<HandleErrorsMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
