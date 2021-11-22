@@ -25,8 +25,6 @@ namespace ASimpleBlogStarter.Client
 
             builder.Services.AddApiAuthorization();
 
-            builder.Services.AddTransient<ISlugValidator, SlugValidator>();
-
             await builder.Build().RunAsync();
         }
     }
