@@ -1,27 +1,3 @@
 ﻿@page "/"
-@using ASimpleBlogStarter.Shared.Post
-@inject IHttpClientFactory HttpClientFactory
 
-<h1>Every post ever</h1>
-
-@if (Model != null)
-{
-    <ul>
-        @foreach (var post in Model.Posts)
-        {
-            <li><a href="/@post.Slug">@post.Title</a></li>
-        }
-    </ul>
-}
-
-@code {
-
-    protected ListAll.Model Model { get; set; } = new ListAll.Model();
-
-    protected override async Task OnInitializedAsync()
-    {
-        var http = HttpClientFactory.CreateClient("ASimpleBlogStarter.AnonymousAPI");
-        Model = await http.GetFromJsonAsync<ListAll.Model>("api/post");
-    }
-
-}
+<h3>Hello World</h3>
