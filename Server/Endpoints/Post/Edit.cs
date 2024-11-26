@@ -29,7 +29,7 @@ namespace ASimpleBlogStarter.Server.Endpoints.Post
         }
     }
 
-    public class EditCommandHandler : AsyncRequestHandler<Update.Command>
+    public class EditCommandHandler : IRequestHandler<Update.Command>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -38,7 +38,7 @@ namespace ASimpleBlogStarter.Server.Endpoints.Post
             _dbContext = dbContext;
         }
 
-        protected override async Task Handle(Update.Command command, CancellationToken cancellationToken)
+        public async Task Handle(Update.Command command, CancellationToken cancellationToken)
         {
             var existing = await _dbContext.Posts.SingleOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
             existing.Body = command.Body;
